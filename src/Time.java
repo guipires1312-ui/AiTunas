@@ -42,6 +42,7 @@ public final class Time {
 
     public boolean isSmaller(Time time) {
         return time.totalSeconds() < this.totalSeconds();
+
     }
 
     public boolean isBigger(Time time) {

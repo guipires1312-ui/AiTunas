@@ -34,20 +34,35 @@ public class Album {
         return this.year;
     }
 
-    public static Album load(File file) {
+    public Time getDuration() {
+        Time duration = new Time(0, 0);
+        for (Song song : this.songs) {
+            duration = duration.add(song.getDuration());
+        }
+        return duration;
+    }
+
+    public static Album load(File file, AiTunas aitunas) {
 
         String albumName;
         int year;
-        List<String> artists = new ArrayList<>();
+        List<String> albumArtists = new ArrayList<>();
         List<Song> songs = new ArrayList<>();
+        List<Artist> artists = new ArrayList<>();
 
         try {
             Scanner scanner = new Scanner(file);
             albumName = scanner.nextLine();
             year = Integer.parseInt(scanner.nextLine());
             String artist = scanner.nextLine();
+            Artist newArtist;
             while ((!"".equals(artist))) {
-                artists.add(artist);
+                if (!aitunas.hasArtist(artist)) {
+                    newArtist = new Artist(artist, new ArrayList<Album>());
+                    aitunas.addArtist(newArtist);
+                }
+                artists.add(aitunas.findArtist(artist));
+                albumArtists.add(artist);
                 artist = scanner.nextLine();
             }
 
@@ -70,7 +85,14 @@ public class Album {
                 trackNumber++;
             }
             scanner.close();
-            return new Album(albumName, year, artists, songs);
+            Album album = new Album(albumName, year, albumArtists, songs);
+
+            for (Artist a : artists) {
+                a.addAlbum(album);
+            }
+
+
+            return album;
 
 
         } catch (FileNotFoundException e) {
@@ -117,15 +139,6 @@ public class Album {
                 return -1;
             }
         });
-    }
-
-
-    public Time getDuration() {
-        Time duration = new Time(0, 0);
-        for (Song song : this.songs) {
-            duration = duration.add(song.getDuration());
-        }
-        return duration;
     }
 
 
