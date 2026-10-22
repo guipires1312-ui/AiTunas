@@ -24,10 +24,14 @@ public class AiTunas {
     }
 
     public List<Album> getAllAlbums() {
+        this.albums.sort((a1, a2) -> {
+            return a1.getYear() - a2.getYear();
+        });
         return this.albums;
     }
 
     public List<Artist> getAllArtists() {
+        this.artists.sort((a1, a2) -> a1.getName().compareToIgnoreCase(a2.getName()));
         return this.artists;
     }
 

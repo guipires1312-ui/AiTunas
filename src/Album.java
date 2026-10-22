@@ -27,6 +27,7 @@ public class Album {
     }
 
     public List<Song> getSongs() {
+        sortByTrack();
         return this.songs;
     }
 
