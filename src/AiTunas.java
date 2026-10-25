@@ -6,6 +6,7 @@ public class AiTunas {
 
     private List<Album> albums;
     private List<Artist> artists;
+    private List<Playlist> playlists;
 
     public AiTunas() {
         albums = new ArrayList<Album>();
@@ -55,5 +56,123 @@ public class AiTunas {
             }
         }
         return null;
+    }
+
+    public List<String> getArtistsForSong(Album.Song song) {
+        for (Album album : this.albums) {
+            if (album.getSongs().contains(song)) {
+                return album.getArtists();
+            }
+        }
+        return new ArrayList<>();
+
+    }
+
+    public class ManualPlaylist implements Playlist {
+        private List<Album.Song> songs;
+        private List<Artist> artists;
+        private String name;
+
+
+        public ManualPlaylist(String name) {
+            this.name = name;
+            songs = new ArrayList<Album.Song>();
+            artists = new ArrayList<Artist>();
+
+        }
+
+        private List<String> artistsListToStrList() {
+            List<String> artistsStr = new ArrayList<String>();
+            for (Artist artist : this.artists) {
+                artistsStr.add(artist.getName());
+            }
+            return artistsStr;
+        }
+
+        public List<Artist> getNewArtists(Album.Song song) {
+            List<String> songArtists = getArtistsForSong(song);
+            List<String> playlistArtists = artistsListToStrList();
+            List<String> newArtistsStr = new ArrayList<>();
+            List<Artist> newArtists = new ArrayList<>();
+            for (String artistName : songArtists) {
+                if (!playlistArtists.contains(artistName)) {
+                    newArtistsStr.add(artistName);
+                }
+            }
+            for (String artistName : newArtistsStr) {
+                newArtists.add(findArtist(artistName));
+            }
+            return newArtists;
+        }
+
+
+        public void addSong(Album.Song song) {
+            List<Artist> newArtists = getNewArtists(song);
+            if (newArtists != null) {
+                this.artists.addAll(newArtists);
+            }
+            this.songs.add(song);
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public Time getDuration() {
+            Time time = new Time(0, 0);
+            for (Album.Song song : songs) {
+                time = time.add(song.getDuration());
+            }
+            return time;
+        }
+
+        public List<Artist> getArtists() {
+            return this.artists;
+        }
+
+        public List<Album.Song> getSongs() {
+            return this.songs;
+        }
+    }
+
+    public class ArtistPlaylist implements Playlist{
+
+        private List<Album.Song> songs = new ArrayList<>();
+        private String artistName;
+        private Artist artist;
+
+        public ArtistPlaylist(String artistName) {
+            this.artistName = artistName;
+            this.artist = findArtist(artistName);
+            List<Album> albums = this.artist.getAlbums();
+            for (Album album : albums) {
+                List<Album.Song> songs = album.getSongs();
+                this.songs.addAll(songs);
+            }
+        }
+
+
+        public String getName() {
+            return artistName;
+
+        }
+
+        public Time getDuration() {
+            Time time = new Time(0, 0);
+            for (Album.Song song : this.songs) {
+                time = time.add(song.getDuration());
+            }
+            return time;
+        }
+
+        public List<Artist> getArtists() {
+            List<Artist> artistList = new ArrayList<>();
+            artistList.add(this.artist);
+            return artistList;
+        }
+
+        public List<Album.Song> getSongs() {
+            return this.songs;
+        }
     }
 }
