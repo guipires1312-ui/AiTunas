@@ -95,6 +95,79 @@ public class Main {
         System.out.println("hasArtist: " + aitunas.hasArtist("Artista Desconhecido"));
         System.out.println("findArtist: " + aitunas.findArtist("Artista Desconhecido"));
 
+// ----------------------------------------------------
+// 5. TESTE DA MANUAL PLAYLIST
+// ----------------------------------------------------
+        System.out.println("\n--- 5. Teste da ManualPlaylist ---");
+        if (!aitunas.getAllAlbums().isEmpty()) {
+
+            AiTunas.ManualPlaylist playlist = aitunas.new ManualPlaylist("As Minhas Favoritas");
+
+            Album album1 = aitunas.getAllAlbums().get(0);
+            if (!album1.getSongs().isEmpty()) {
+                Album.Song musica1 = album1.getSongs().get(0);
+                System.out.println("-> Adicionando a música: " + musica1.getName());
+                playlist.addSong(musica1);
+
+                if (album1.getSongs().size() > 1) {
+                    Album.Song musica2 = album1.getSongs().get(1);
+                    System.out.println("-> Adicionando a música: " + musica2.getName());
+                    playlist.addSong(musica2);
+                }
+            }
+
+            if (aitunas.getAllAlbums().size() > 1) {
+                Album album2 = aitunas.getAllAlbums().get(1);
+                if (!album2.getSongs().isEmpty()) {
+                    Album.Song musicaAlbum2 = album2.getSongs().get(0);
+                    System.out.println("-> Adicionando música de outro álbum: " + musicaAlbum2.getName());
+                    playlist.addSong(musicaAlbum2);
+                }
+            }
+
+            System.out.println("\n--- Estado Final da Playlist ---");
+            System.out.println("Nome da Playlist: " + playlist.getName());
+            System.out.println("Duração Total: " + playlist.getDuration());
+
+            System.out.println("\nMúsicas na Playlist:");
+            for (Album.Song s : playlist.getSongs()) {
+                System.out.println("  - " + s.getName() + " [" + s.getDuration() + "]");
+            }
+
+            System.out.println("\nArtistas na Playlist (sem duplicados):");
+            for (Artist a : playlist.getArtists()) {
+                System.out.println("  - " + a.getName());
+            }
+        }
+
+
+// ----------------------------------------------------
+// 6. TESTE DA ARTIST PLAYLIST
+// ----------------------------------------------------
+        System.out.println("\n--- 6. Teste da ArtistPlaylist ---");
+        if (!aitunas.getAllArtists().isEmpty()) {
+
+            String nomeArtista = aitunas.getAllArtists().get(0).getName();
+            System.out.println("-> Criando playlist para o artista: " + nomeArtista);
+
+            AiTunas.ArtistPlaylist artistPlaylist = aitunas.new ArtistPlaylist(nomeArtista);
+
+            System.out.println("\n--- Estado Final da ArtistPlaylist ---");
+            System.out.println("Nome da Playlist: " + artistPlaylist.getName());
+            System.out.println("Duração Total: " + artistPlaylist.getDuration());
+
+            System.out.println("\nMúsicas na Playlist:");
+            for (Album.Song s : artistPlaylist.getSongs()) {
+                System.out.println("  - " + s.getName() + " [" + s.getDuration() + "]");
+            }
+
+            System.out.println("\nArtistas na Playlist:");
+            for (Artist a : artistPlaylist.getArtists()) {
+                System.out.println("  - " + a.getName());
+            }
+        }
+
+
         System.out.println("\n=================================================");
         System.out.println("          TODOS OS TESTES CONCLUÍDOS!            ");
         System.out.println("=================================================");
@@ -105,4 +178,6 @@ public class Main {
             System.out.println("  Faixa " + s.getTrackNumber() + " | " + s.getName() + " [" + s.getDuration() + "]");
         }
     }
+
+
 }
